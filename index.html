@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paragraph to Q&A Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        main {
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #008CBA;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #007bb5;
+        }
+        .output {
+            margin-top: 20px;
+        }
+        .question-answer {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Paragraph to Q&A Generator</h1>
+    </header>
+
+    <main>
+        <h2>Enter a paragraph to convert it to Q&A format:</h2>
+        <textarea id="inputParagraph" placeholder="Enter your paragraph here..."></textarea>
+        <button onclick="generateQuestions()">Generate Questions & Answers</button>
+
+        <div id="output" class="output"></div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Paragraph to Q&A Generator</p>
+    </footer>
+
+    <script>
+        function generateQuestions() {
+            const paragraph = document.getElementById("inputParagraph").value.trim();
+            const output = document.getElementById("output");
+
+            if (!paragraph) {
+                output.innerHTML = "<p>Please enter a paragraph to generate Q&A.</p>";
+                return;
+            }
+
+            // Split the paragraph into sentences.
+            const sentences = paragraph.split('.').filter(sentence => sentence.trim() !== "");
+            output.innerHTML = ""; // Clear previous output
+
+            sentences.forEach(sentence => {
+                const questionAnswer = createQuestionAnswer(sentence);
+                const qAndA = document.createElement("div");
+                qAndA.classList.add("question-answer");
+                qAndA.innerHTML = `<strong>Q:</strong> ${questionAnswer.question}<br><strong>A:</strong> ${questionAnswer.answer}<br><strong>Your Text:</strong> ${sentence.trim()}.`;
+                output.appendChild(qAndA);
+            });
+        }
+
+        // Function to generate a full question and answer pair
+        function createQuestionAnswer(sentence) {
+            const sentenceLower = sentence.toLowerCase();
+            let question = "";
+            let answer = sentence.trim() + ".";
+
+            // Generate a question based on certain keywords in the sentence.
+            if (sentenceLower.includes("is")) {
+                question = "What is " + sentence.charAt(0).toUpperCase() + sentence.slice(1) + "?";
+            } else if (sentenceLower.includes("where")) {
+                question = "Where is " + sentence.charAt(0).toUpperCase() + sentence.slice(1) + "?";
+            } else if (sentenceLower.includes("who")) {
+                question = "Who is " + sentence.charAt(0).toUpperCase() + sentence.slice(1) + "?";
+            } else if (sentenceLower.includes("are")) {
+                question = "What are " + sentence.charAt(0).toUpperCase() + sentence.slice(1) + "?";
+            } else if (sentenceLower.includes("how")) {
+                question = "How " + sentence.charAt(0).toUpperCase() + sentence.slice(1) + "?";
+            } else {
+                // If no specific keyword found, generate a general question.
+                question = "Can you explain: " + sentence.charAt(0).toUpperCase() + sentence.slice(1) + "?";
+            }
+
+            return { question, answer };
+        }
+    </script>
+
+</body>
+</html>
